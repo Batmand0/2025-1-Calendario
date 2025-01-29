@@ -43,14 +43,18 @@ const auth = new google.auth.GoogleAuth({
 const calendar = google.calendar({ version: 'v3', auth });
 
 //Probar el cliente
+/*
 auth.getClient()
   .then(() => console.log('Autenticación exitosa'))
   .catch(error => console.error('Error en la autenticación:', error));
+*/
 
 //Obtener token para Hoppscotch.io
-auth.getAccessToken()
+/*
+  auth.getAccessToken()
   .then(token => console.log('Token de acceso:', token))
   .catch(error => console.error('Error al obtener el token:', error));
+*/
 
 // Ruta para obtener eventos
 app.get('/api/events', async (req, res) => {
@@ -66,7 +70,7 @@ app.get('/api/events', async (req, res) => {
     });
 
 
-    console.log('Respuesta completa:', response.data); // Registra la respuesta completa
+    //console.log('Respuesta completa:', response.data); // Registra la respuesta completa
     const events = response.data.items.map(event => ({
       id: event.id,
       title: event.summary,
@@ -78,7 +82,7 @@ app.get('/api/events', async (req, res) => {
       htmlLink: event.htmlLink
     }));
 
-    console.log("Eventos obtenidos: ", events);
+    //console.log("Eventos obtenidos: ", events);
     res.json(events);
   } catch (error) {
     console.error('Error al obtener eventos:', error.response?.data || error.messager);
