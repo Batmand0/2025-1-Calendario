@@ -20,7 +20,7 @@ class Calendar {
             const timeMin = new Date(`${year}-01-01T00:00:00`).toISOString();
             const timeMax = new Date(`${year}-08-31T23:59:59`).toISOString();
             
-            console.log('Solicitando eventos desde:', timeMin, 'hasta:', timeMax);
+            //console.log('Solicitando eventos desde:', timeMin, 'hasta:', timeMax);
             const response = await fetch(`http://localhost:3000/api/events?timeMin=${timeMin}&timeMax=${timeMax}`);
             const data = await response.json();
             
@@ -47,7 +47,7 @@ class Calendar {
             });
             
             // Añade este log para verificar cómo quedaron formateados los eventos
-            console.log('Eventos procesados:', this.events);
+            //console.log('Eventos procesados:', this.events);
             
         } catch (error) {
             console.error('Error completo:', error);
@@ -57,13 +57,13 @@ class Calendar {
     
     // Modifica el método getEventsForDate para ser más flexible
     getEventsForDate(date) {
-        console.log('Buscando eventos para la fecha:', date);
-        console.log('Eventos disponibles:', this.events);
+        /*console.log('Buscando eventos para la fecha:', date);
+        console.log('Eventos disponibles:', this.events);*/
         
         //Se hace una comparación de fechas y las registra.
         return this.events.filter(event => {
             const eventDate = event.date;
-            console.log('Comparando:', eventDate, 'con', date);
+            //console.log('Comparando:', eventDate, 'con', date);
             return eventDate === date;
         });
     }
@@ -119,7 +119,7 @@ class Calendar {
             const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const dayEvents = this.getEventsForDate(dateStr);
 
-            console.log(`Eventos encontrados para ${dateStr}:`, dayEvents);
+            //console.log(`Eventos encontrados para ${dateStr}:`, dayEvents);
             const dayDiv = document.createElement('div');
             dayDiv.className = `day ${dayEvents.length > 0 ? 'has-events' : ''}`;
             dayDiv.textContent = day;
