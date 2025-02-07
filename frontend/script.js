@@ -161,8 +161,7 @@ class Calendar {
                             <i class="bi bi-link"></i>
                          </a> 
                         <br>
-                        <strong class="text-secondary">${formatDate(event.start)} -</strong>
-                        <strong class="text-secondary">${formatDate(event.end)}</strong>
+                        ${isAllDay(event.start, event.end)}
                         <br>
                         <small class="text-muted">${event.description}</small>
                         <br>
