@@ -135,7 +135,26 @@ class Calendar {
                         minute: '2-digit'
                     });
                 };
+                
+                //Función para saber si es evento de todo un dia o con horas asignadas.
+                const isAllDay = (event1, event2) => {
+                    const date1 = new Date(event1);
+                    const date2 = new Date(event2);
+                
+                    // Comparar horas y minutos para ver si son exactamente iguales
+                    const isSameTime = date1.getHours() === date2.getHours() &&
+                                       date1.getMinutes() === date2.getMinutes();
+                
+                    if (isSameTime) {
+                        return `<strong class="text-secondary">Todo el día</strong>`;
+                    } else {
+                        return `<strong class="text-secondary">${formatDate(event1)} -</strong>
+                                <strong class="text-secondary">${formatDate(event2)}</strong>`;
+                    }
+                };
+
                 tooltip.innerHTML = dayEvents.map(event => 
+                    //console.log(`Evento inicia: ${console.log(event.start)} \n Evento termina: ${console.log(event.end)}`)
                     `<div class="event-item">
                         <strong class="text-primary">${event.title}</strong>
                          <a href="${event.htmlLink}">
