@@ -48,20 +48,8 @@
 }
 
 .has-events {
+    color: black;
     font-weight: bold;
-    color: #0d6efd;
-}
-
-.has-events::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    background-color: #0d6efd;
-    border-radius: 50%;
 }
 
 /* Importante: Modificación del tooltip para funcionar con Bootstrap */

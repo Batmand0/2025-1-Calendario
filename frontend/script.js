@@ -1,3 +1,19 @@
+// Función que convierte una descripción en formato clave: valor a un objeto JSON
+function parseDescriptionToJSON(description) {
+    if (!description) {
+        return {};
+    }
+    const jsonObject = {};
+    const pairs = description.split(',');
+
+    pairs.forEach(pair => {
+        const [key, value] = pair.split(':').map(item => item.trim());
+        jsonObject[key] = isNaN(value) ? value : Number(value);
+    });
+
+    return jsonObject;
+}
+
 class Calendar {
     constructor() {
         // Inicializa los meses y días de la semana, así como la lista de eventos y el contenedor del calendario
@@ -16,6 +32,7 @@ class Calendar {
     // Método asíncrono que carga los eventos desde una API
     async loadEvents() {
         try {
+
             const year = new Date().getFullYear();
             const timeMin = new Date(`${year}-01-01T00:00:00`).toISOString();
             const timeMax = new Date(`${year}-08-31T23:59:59`).toISOString();
@@ -25,20 +42,27 @@ class Calendar {
             const data = await response.json();
             
             // Añade este log para ver la estructura exacta de cada evento
-            console.log('Estructura de un evento:', data[0]);
+            //console.log('Estructura de un evento:', data[0]);
             
             this.events = data.map(event => {
-                // Asegúrate de que las fechas estén en el formato correcto
                 const startDate = event.start?.dateTime || event.start?.date || event.start;
                 //Usa el operador ?. para evitar errores si start o end son undefined
                 const endDate = event.end?.dateTime || event.end?.date || event.end;
                 //Proporciona múltiples fallbacks (alternativas) para obtener la fecha
-                
+
+                // Intenta convertir event.description a JSON
+                let descriptionJSON = {};
+                try {
+                    descriptionJSON = parseDescriptionToJSON(event.description);
+                } catch (error) {
+                    console.error('Error al convertir event.description a JSON:', error);
+                }
+                //console.log('Descripción JSON:', descriptionJSON);  // Añade este log para verificar la conversión
                 return {
                     //Convierte cualquier formato de fecha en un objeto Date y lo convierte en formato ISO
                     date: new Date(startDate).toISOString().split('T')[0], // Formato YYYY-MM-DD
                     title: event.title || event.summary || '',
-                    description: event.description || '',
+                    description: descriptionJSON,
                     location: event.location || '',
                     start: startDate,
                     end: endDate,
@@ -112,6 +136,62 @@ class Calendar {
             daysDiv.appendChild(emptyDay);
         }
 
+        //Hacer una función con parametros de clase css y un numero.
+        const changeColor = (element, num) => {
+            if(element && num){
+                element.style.color = "white";
+                element.style.borderRadius = "20px"; // Añade un borde redondeado de 10 píxeles
+                switch(num)
+                {
+                    case 1:
+                        //Color info
+                        element.style.backgroundColor = "rgb(13, 202, 240)";
+                        break;
+                    case 2:
+                        //Color warning
+                        element.style.backgroundColor = "rgb(255, 193, 7)";
+                        break;
+                    case 3:
+                        //Color danger
+                        element.style.backgroundColor = "rgb(220, 53, 69)"; 
+                        break;
+                    case 4:
+                        //Color secondary
+                        element.style.backgroundColor = "rgb(108, 117, 125)";
+                        break;
+                    case 5:
+                        //Color success
+                        element.style.backgroundColor = "rgb(25, 135, 84)";
+                        break;
+                    case 6:
+                        //Color primary
+                        element.style.backgroundColor = "rgb(13, 110, 253)";
+                        break;
+                }
+            } else {
+                console.log("Elemento no encontrado.");
+            }
+        }
+        // En la parte donde creas el tooltip
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            return date.toLocaleString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        };
+
+        //Función para saber si es evento de todo un dia o con horas asignadas.
+        const isAllDay = (event1, event2) => {
+            const isSameTime = formatDate(event1) === formatDate(event2);
+            if (isSameTime) {
+                return `<strong class="text-secondary">Todo el día</strong>`;
+            } else {
+                return `<strong class="text-secondary">${formatDate(event1)} -</strong>
+                        <strong class="text-secondary">${formatDate(event2)}</strong>`;
+            }
+        };
+
         //Obtiene la cantidad de días en el mes específico
         const daysInMonth = this.getDaysInMonth(monthIndex, year);
         //Se recorre cada día del mes
@@ -128,25 +208,6 @@ class Calendar {
             if (dayEvents.length > 0) {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'event-tooltip'; // Cambiado de 'tooltip' a 'event-tooltip'
-                // En la parte donde creas el tooltip
-                const formatDate = (dateString) => {
-                    const date = new Date(dateString);
-                    return date.toLocaleString('es-ES', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                };
-                
-                //Función para saber si es evento de todo un dia o con horas asignadas.
-                const isAllDay = (event1, event2) => {
-                    const isSameTime = formatDate(event1) === formatDate(event2);
-                    if (isSameTime) {
-                        return `<strong class="text-secondary">Todo el día</strong>`;
-                    } else {
-                        return `<strong class="text-secondary">${formatDate(event1)} -</strong>
-                                <strong class="text-secondary">${formatDate(event2)}</strong>`;
-                    }
-                };
 
                 tooltip.innerHTML = dayEvents.map(event => 
                     //console.log(`Evento inicia: ${console.log(event.start)} \n Evento termina: ${console.log(event.end)}`)
@@ -158,12 +219,13 @@ class Calendar {
                         <br>
                         ${isAllDay(event.start, event.end)}
                         <br>
-                        <small class="text-muted">${event.description}</small>
-                        <br>
                         <small class="text-muted">${event.location}</small>
                     </div>`
                 ).join('<hr>');
                 dayDiv.appendChild(tooltip);
+
+                const colorNumber = dayEvents[0].description.Color;
+                changeColor(dayDiv, colorNumber);
             }
 
             daysDiv.appendChild(dayDiv);
