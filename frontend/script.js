@@ -21,6 +21,14 @@ class Calendar {
         this.weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
         this.events = [];
         this.container = document.getElementById('calendar-container');
+        this.colors = [
+            "rgb(13, 202, 240)", // Color info
+            "rgb(255, 193, 7)",  // Color warning
+            "rgb(220, 53, 69)",  // Color danger
+            "rgb(108, 117, 125)",// Color secondary
+            "rgb(25, 135, 84)",  // Color success
+            "rgb(13, 110, 253)"  // Color primary
+        ];
     }
 
     // Método asíncrono que inicia la carga de eventos y renderiza el calendario
@@ -141,33 +149,8 @@ class Calendar {
             if(element && num){
                 element.style.color = "white";
                 element.style.borderRadius = "20px"; // Añade un borde redondeado de 10 píxeles
-                switch(num)
-                {
-                    case 1:
-                        //Color info
-                        element.style.backgroundColor = "rgb(13, 202, 240)";
-                        break;
-                    case 2:
-                        //Color warning
-                        element.style.backgroundColor = "rgb(255, 193, 7)";
-                        break;
-                    case 3:
-                        //Color danger
-                        element.style.backgroundColor = "rgb(220, 53, 69)"; 
-                        break;
-                    case 4:
-                        //Color secondary
-                        element.style.backgroundColor = "rgb(108, 117, 125)";
-                        break;
-                    case 5:
-                        //Color success
-                        element.style.backgroundColor = "rgb(25, 135, 84)";
-                        break;
-                    case 6:
-                        //Color primary
-                        element.style.backgroundColor = "rgb(13, 110, 253)";
-                        break;
-                }
+                element.style.backgroundColor = this.colors[num - 1] || "rgb(0, 0, 0)"; 
+                // Usa el color del arreglo o negro por defecto
             } else {
                 console.log("Elemento no encontrado.");
             }
