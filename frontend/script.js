@@ -121,6 +121,7 @@ class Calendar {
 
             //console.log(`Eventos encontrados para ${dateStr}:`, dayEvents);
             const dayDiv = document.createElement('div');
+            //Si tiene eventos se pone la clase 'has-events' sino se deja vacío.
             dayDiv.className = `day ${dayEvents.length > 0 ? 'has-events' : ''}`;
             dayDiv.textContent = day;
 
@@ -138,13 +139,7 @@ class Calendar {
                 
                 //Función para saber si es evento de todo un dia o con horas asignadas.
                 const isAllDay = (event1, event2) => {
-                    const date1 = new Date(event1);
-                    const date2 = new Date(event2);
-                
-                    // Comparar horas y minutos para ver si son exactamente iguales
-                    const isSameTime = date1.getHours() === date2.getHours() &&
-                                       date1.getMinutes() === date2.getMinutes();
-                
+                    const isSameTime = formatDate(event1) === formatDate(event2);
                     if (isSameTime) {
                         return `<strong class="text-secondary">Todo el día</strong>`;
                     } else {
