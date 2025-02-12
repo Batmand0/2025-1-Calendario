@@ -25,7 +25,7 @@ class Calendar {
             "rgb(13, 202, 240)", // Color info
             "rgb(255, 193, 7)",  // Color warning
             "rgb(220, 53, 69)",  // Color danger
-            "rgb(108, 117, 125)",// Color secondary
+            "rgb(0, 0, 0)",// Color secondary
             "rgb(25, 135, 84)",  // Color success
             "rgb(13, 110, 253)"  // Color primary
         ];
@@ -89,15 +89,20 @@ class Calendar {
     
     // Modifica el método getEventsForDate para ser más flexible
     getEventsForDate(date) {
-        /*console.log('Buscando eventos para la fecha:', date);
-        console.log('Eventos disponibles:', this.events);*/
-        
-        //Se hace una comparación de fechas y las registra.
-        return this.events.filter(event => {
-            // Obtener todas las fechas del evento
+        //Filter crea un nuevo array con los eventos que cumplen la condición
+        const events = this.events.filter(event => {
+            //Obtiene todas las fechas del evento usando getDatesInRange
             const eventDates = this.getDatesInRange(event.start, event.end);
-            // Verificar si la fecha dada está en el rango de fechas del evento
+            //Verifica si la fecha buscada está en ese rango de fechas.
             return eventDates.includes(date);
+        });
+    
+        // Ordenar eventos: primero los que tienen descripción con color
+        return events.sort((a, b) => {
+            //Si description existe y tiene la propiedad Color, entonces aHasColor = 1, sino -1
+            const aHasColor = a.description?.Color ? 1 : -1;
+            const bHasColor = b.description?.Color ? 1 : -1;
+            return bHasColor - aHasColor;
         });
     }
 
