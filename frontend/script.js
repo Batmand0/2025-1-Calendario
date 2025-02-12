@@ -94,9 +94,10 @@ class Calendar {
         
         //Se hace una comparación de fechas y las registra.
         return this.events.filter(event => {
-            const eventDate = event.date;
-            //console.log('Comparando:', eventDate, 'con', date);
-            return eventDate === date;
+            // Obtener todas las fechas del evento
+            const eventDates = this.getDatesInRange(event.start, event.end);
+            // Verificar si la fecha dada está en el rango de fechas del evento
+            return eventDates.includes(date);
         });
     }
 
@@ -108,6 +109,20 @@ class Calendar {
     // Método que obtiene el primer día de un mes específico
     getFirstDayOfMonth(month, year) {
         return new Date(year, month, 1).getDay();
+    }
+
+    // Método que genera una lista de fechas entre dos fechas dadas
+    getDatesInRange(startDate, endDate) {
+        const dates = [];
+        let currentDate = new Date(startDate);
+        const lastDate = new Date(endDate);
+
+        while (currentDate < lastDate) {
+            dates.push(new Date(currentDate).toISOString().split('T')[0]);
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return dates;
     }
 
     // Método que renderiza un mes específico
