@@ -9,7 +9,6 @@ El sistema se conecta con la **Google Calendar API** para sincronizar los evento
 
 - 🗓️ Visualización interactiva de eventos académicos
 - 🎨 Interfaz responsiva y moderna con Bootstrap
-- 🔔 Envío automatizado de notificaciones por correo usando Google Apps Script
 - 🎯 Sistema de categorías por colores para diferenciar tipos de eventos
 - 🛠️ Tooltips interactivos con información detallada al pasar el cursor
 
